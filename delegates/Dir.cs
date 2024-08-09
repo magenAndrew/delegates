@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Delegates
+﻿namespace Delegates
 {
+    /// <summary>
+    /// сласс для иллюстрации для работы с делегатами и событиями
+    // </summary>
     public class Dir
     {
-        IEnumerable<FileInfo> Files {  get; set; }
+        IEnumerable<FileInfo> Files { get; set; }
         private FileInfo _maxFile;
-        public Dir(string path) {
+        public Dir(string path)
+        {
 
             DirectoryInfo DirInfo = new DirectoryInfo(path);
             Files = DirInfo.GetFiles();
 
-          }
+        }
         public event EventHandler<FileArgs> FileFound;
         protected virtual void OnFileToched(FileInfo f)
         {
@@ -28,24 +25,26 @@ namespace Delegates
             }
         }
 
-        public FileInfo MaxFile { 
-            get{ 
+        public FileInfo MaxFile
+        {
+            get
+            {
                 if (_maxFile == null)
                     _maxFile = Files?.GetMax(getSFileSize);
-                return _maxFile; 
+                return _maxFile;
             }
-            } 
+        }
         public class FileArgs : EventArgs
         {
             public string Name { get; set; }
-            public long Size  { get; set; }
+            public long Size { get; set; }
         }
 
 
-        public Func<FileInfo,float> getSFileSize = x=>x.Length;
+        public Func<FileInfo, float> getSFileSize = x => x.Length;
         public void ProcessFile()
         {
- 
+
             foreach (FileInfo file in Files)
             {
                 OnFileToched(file);
