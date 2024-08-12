@@ -1,54 +1,47 @@
-﻿namespace Delegates
+﻿using System.IO;
+using System.Runtime;
+
+namespace Delegates
 {
     /// <summary>
-    /// сласс для иллюстрации для работы с делегатами и событиями
+    /// Класс для иллюстрации для работы с делегатами и событиями
     // </summary>
     public class Dir
     {
-        IEnumerable<FileInfo> Files { get; set; }
-        private FileInfo _maxFile;
-        public Dir(string path)
-        {
+        public DirectoryInfo DirInfo { get; private set; }
 
-            DirectoryInfo DirInfo = new DirectoryInfo(path);
-            Files = DirInfo.GetFiles();
+        public Dir(string path) => DirInfo = new DirectoryInfo(path);
 
-        }
         public event EventHandler<FileArgs> FileFound;
-        protected virtual void OnFileToched(FileInfo f)
-        {
-            var eventArg = new FileArgs { Name = f.Name, Size = f.Length };
-            EventHandler<FileArgs> handler = FileFound;
-            if (handler != null)
-            {
-                handler?.Invoke(this, eventArg);
-            }
-        }
-
+ 
         public FileInfo MaxFile
         {
             get
             {
-                if (_maxFile == null)
-                    _maxFile = Files?.GetMax(getSFileSize);
-                return _maxFile;
+                return DirInfo.GetFiles().GetMax(GetSFileSize);
             }
         }
         public class FileArgs : EventArgs
         {
-            public string Name { get; set; }
-            public long Size { get; set; }
+            public string? Name { get; set; }
+            public long? Size { get; set; }
         }
 
 
-        public Func<FileInfo, float> getSFileSize = x => x.Length;
+        public Func<FileInfo, float> GetSFileSize = x => x.Length;
+
         public void ProcessFile()
         {
 
-            foreach (FileInfo file in Files)
+            foreach (FileInfo file in DirInfo.GetFiles())
             {
                 OnFileToched(file);
             }
         }
+        protected virtual void OnFileToched(FileInfo f)
+        {
+            FileFound?.Invoke(this, new FileArgs { Name = f.Name, Size = f.Length });
+        }
+
     }
 }

@@ -20,9 +20,9 @@ internal class Program
         var dir = new Dir(path);
 
         Console.WriteLine($"Target path: {path}");
-        dir.FileFound += subscriberFileTouched1;
+        dir.FileFound += SubscriberFileTouched1;
 
-        dir.FileFound += subscriberFileTouched2;
+        dir.FileFound += SubscriberFileTouched2;
         var maxFile = dir.MaxFile;
         Console.WriteLine($"Max File is {maxFile.Name}, size : {maxFile.Length} ");
         Console.WriteLine($"Let's start processing files");
@@ -34,7 +34,7 @@ internal class Program
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    static void subscriberFileTouched1(object sender, FileArgs e)
+    static void SubscriberFileTouched1(object sender, FileArgs e)
     {
         Console.WriteLine($"Subscriber 1:Touched the file  {e.Name}");
     }
@@ -43,13 +43,13 @@ internal class Program
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    static void subscriberFileTouched2(object sender, FileArgs e)
+    static void SubscriberFileTouched2(object sender, FileArgs e)
     {
         if (e.Name.Equals(((Dir)sender)?.MaxFile.Name))
         {
 
-            ((Dir)sender).FileFound -= subscriberFileTouched2;
-            Console.WriteLine("Subscriber 2:It is мax size file ! I had stopped work.");
+            ((Dir)sender).FileFound -= SubscriberFileTouched2;
+            Console.WriteLine("Subscriber 2:It is мax size file! I had stopped work.");
         }
         else {
             Console.WriteLine($"Subscriber 2:This file is less than the maximum size.");
